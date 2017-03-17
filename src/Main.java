@@ -1,3 +1,4 @@
+import javax.xml.bind.ValidationException;
 import java.io.File;
 
 /**
@@ -23,7 +24,20 @@ public class Main {
                 System.out.println("Resizing Files...");
                 double factorW = Double.parseDouble(args[2]);
                 double factorH = Double.parseDouble(args[3]);
-                BatchImageUtil.resize(files, factorW, factorH);
+                ImageUtil.resize(files, factorW, factorH);
+                break;
+            case "spritesheet": // name of spritesheet is args[2] (with file extension)
+                File output = new File(args[2]);
+                // grab file extension
+                String format = output.getPath().substring(output.getPath().lastIndexOf(".") + 1);
+                try {
+                    ImageUtil.saveImageToFile(
+                        ImageUtil.createSpriteSheet(
+                                ImageUtil.loadImagesInDir(directory), 10
+                        ), output, format);
+                } catch (ValidationException e) {
+                    System.out.println(e.getMessage());
+                }
         }
     }
 }
